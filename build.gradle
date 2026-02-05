@@ -1,53 +1,59 @@
 plugins {
-    id "net.serenity-bdd.serenity-gradle-plugin" version "4.2.30"
     id 'java'
 }
 
-defaultTasks 'clean', 'test', 'aggregate'
+group = 'com.banco.integracion'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
-sourceCompatibility = 17
-targetCompatibility = 17
-
 ext {
-    slf4jVersion = '1.7.7'
-    serenityCoreVersion = '4.3.2'
-    junitVersion = '5.13.0'
-    assertJVersion = '3.23.1'
-    lombokVersion = '1.18.24'
-    logbackVersion = '1.2.11'
+    serenityVersion = '4.1.20'
+    cucumberVersion = '7.14.0'
 }
 
 dependencies {
-    testImplementation "net.serenity-bdd:serenity-core:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-junit5:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-screenplay:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-screenplay-webdriver:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-ensure:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-junit:${serenityCoreVersion}",
-            "org.junit.jupiter:junit-jupiter-api:${junitVersion}",
-            "org.junit.jupiter:junit-jupiter-engine:${junitVersion}",
-            "org.assertj:assertj-core:${assertJVersion}",
-            "org.projectlombok:lombok:${lombokVersion}",
-            "ch.qos.logback:logback-classic:${logbackVersion}"
+
+    // 🔹 Serenity Core
+    testImplementation "net.serenity-bdd:serenity-core:$serenityVersion"
+
+    // 🔹 Screenplay
+    testImplementation "net.serenity-bdd:serenity-screenplay:$serenityVersion"
+    testImplementation "net.serenity-bdd:serenity-screenplay-rest:$serenityVersion"
+
+    // 🔹 Serenity + Cucumber (JUnit Platform)
+    testImplementation "net.serenity-bdd:serenity-cucumber:$serenityVersion"
+    testImplementation "com.github.tomakehurst:wiremock-jre8:2.35.0"
+
+    // 🔹 Cucumber (JUnit 5 / Platform)
+    testImplementation "io.cucumber:cucumber-java:$cucumberVersion"
+    testImplementation "io.cucumber:cucumber-junit-platform-engine:$cucumberVersion"
+
+    // 🔹 REST Assured
+    testImplementation "io.rest-assured:rest-assured:5.4.0"
+
+    // 🔹 Logging
+    testImplementation "ch.qos.logback:logback-classic:1.4.14"
+
+    // 🔹 AWS SDK (DynamoDB)
+    implementation platform("software.amazon.awssdk:bom:2.25.14")
+    implementation "software.amazon.awssdk:dynamodb"
+
+    // Junit4 para runners
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.assertj:assertj-core:3.25.3"
+    testImplementation "org.junit.platform:junit-platform-suite:1.10.0"
 }
 
 test {
     useJUnitPlatform()
-    testLogging.showStandardStreams = true
     systemProperties System.getProperties()
 }
-
-gradle.startParameter.continueOnFailure = true
-
-serenity {
-    reports = ["single-page-html"]
-
-    // // Specify the root package of any JUnit acceptance tests
-    testRoot="starter"
-}
-
-test.finalizedBy(aggregate)
