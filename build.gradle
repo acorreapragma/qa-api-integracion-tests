@@ -1,9 +1,22 @@
-plugins {
-    id 'java'
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "net.serenity-bdd:serenity-gradle-plugin:4.0.14"
+    }
 }
 
-group = 'com.banco.integracion'
-version = '1.0.0'
+plugins {
+    id 'java'
+    id 'idea'
+    // id 'net.serenity-bdd.serenity-gradle-plugin' version '4.0.14'
+}
+
+apply plugin: "net.serenity-bdd.serenity-gradle-plugin"
+
+defaultTasks 'clean', 'test', 'aggregate'
 
 java {
     toolchain {
@@ -19,41 +32,37 @@ ext {
     serenityVersion = '4.1.20'
     cucumberVersion = '7.14.0'
 }
-
 dependencies {
 
-    // 🔹 Serenity Core
-    testImplementation "net.serenity-bdd:serenity-core:$serenityVersion"
+    implementation "net.serenity-bdd:serenity-core:$serenityVersion"
+    implementation "net.serenity-bdd:serenity-screenplay:$serenityVersion"
+    implementation "net.serenity-bdd:serenity-screenplay-rest:$serenityVersion"
+    implementation "net.serenity-bdd:serenity-ensure:$serenityVersion"
 
-    // 🔹 Screenplay
-    testImplementation "net.serenity-bdd:serenity-screenplay:$serenityVersion"
-    testImplementation "net.serenity-bdd:serenity-screenplay-rest:$serenityVersion"
+    implementation "io.rest-assured:rest-assured:5.4.0"
 
-    // 🔹 Serenity + Cucumber (JUnit Platform)
     testImplementation "net.serenity-bdd:serenity-cucumber:$serenityVersion"
-    testImplementation "com.github.tomakehurst:wiremock-jre8:2.35.0"
-
-    // 🔹 Cucumber (JUnit 5 / Platform)
     testImplementation "io.cucumber:cucumber-java:$cucumberVersion"
     testImplementation "io.cucumber:cucumber-junit-platform-engine:$cucumberVersion"
 
-    // 🔹 REST Assured
-    testImplementation "io.rest-assured:rest-assured:5.4.0"
-
-    // 🔹 Logging
-    testImplementation "ch.qos.logback:logback-classic:1.4.14"
-
-    // 🔹 AWS SDK (DynamoDB)
-    implementation platform("software.amazon.awssdk:bom:2.25.14")
-    implementation "software.amazon.awssdk:dynamodb"
-
-    // Junit4 para runners
-    testImplementation "junit:junit:4.13.2"
-    testImplementation "org.assertj:assertj-core:3.25.3"
     testImplementation "org.junit.platform:junit-platform-suite:1.10.0"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.8.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:5.8.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:5.8.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.8.2"
+    testImplementation "org.junit.platform:junit-platform-launcher:1.10.0"
+    testImplementation "org.junit.platform:junit-platform-runner:1.10.0"
+    testImplementation "org.junit.platform:junit-platform-console:1.10.0"
+    testImplementation "org.junit.platform:junit-platform-reporting:1.10.0"
+    testImplementation "org.junit.platform:junit-platform-commons:1.10.0"   
 }
 
 test {
     useJUnitPlatform()
     systemProperties System.getProperties()
+    testLogging.showStandardStreams = true
+}
+
+serenity {
+    reports = ["single-page-html"]
 }
