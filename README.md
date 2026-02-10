@@ -1,25 +1,159 @@
-# Serenity JUnit Starter project
+# Proyecto de Automatización de Pruebas API con Serenity BDD
 
-Get started quickly with Serenity BDD and JUnit 5 with this simple starter project. 
+Este es un proyecto de inicio rápido (starter) para la automatización de pruebas de API, utilizando el patrón Screenplay con Serenity BDD, Cucumber, y Java.
 
-## Get the code
+---
 
-Click on the [Use This Template button](https://github.com/serenity-bdd/serenity-junit-starter/generate) to create a new project in your own Github account. 
+## Tabla de Contenidos
 
-Or simply [download a zip](https://github.com/serenity-bdd/serenity-junit-starter/archive/master.zip) file.
+- [Tecnologías Utilizadas](#tecnologías-utilizadas)
+- [Prerrequisitos](#prerrequisitos)
+- [Instalación](#instalación)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Configuración de Entornos](#configuración-de-entornos)
+- [Ejecución de las Pruebas](#ejecución-de-las-pruebas)
+  - [Usando Gradle](#usando-gradle)
+  - [Usando Maven](#usando-maven)
+- [Visualización de Reportes](#visualización-de-reportes)
 
-## Running the tests under Maven
+---
 
-The template project comes with both Maven and Gradle build scripts. To run the tests with Maven, open a command window and run:
+## Tecnologías Utilizadas
 
-  ./mvnw clean verify
+- **Java 17**: Lenguaje de programación base.
+- **Serenity BDD**: Framework para escribir pruebas de aceptación y regresión de alta calidad.
+- **Cucumber**: Herramienta para escribir pruebas en formato BDD (Gherkin).
+- **Screenplay Pattern**: Patrón de diseño para escribir pruebas de aceptación mantenibles y escalables.
+- **Rest-Assured**: Librería para probar y validar servicios REST en Java.
+- **Gradle**: Herramienta de automatización de compilación.
+- **Maven**: Herramienta de gestión y comprensión de proyectos de software.
+- **JUnit 5**: Framework de pruebas para Java.
 
-## Use Gradle
+---
 
-For GRADLE, pen a command window and run:
+## Prerrequisitos
 
-  ./gradlew test 
+Asegúrate de tener instalado lo siguiente en tu sistema:
 
-## Viewing the reports
+- **JDK 17** (Java Development Kit).
+- **Git** para clonar el repositorio.
 
-Both of the commands provided above will produce a Serenity test report in the `target/site/serenity` directory. Go take a look!
+---
+
+## Instalación
+
+1.  Clona este repositorio en tu máquina local:
+    ```bash
+    git clone <URL_DEL_REPOSITORIO>
+    cd clone <URL_DEL_REPOSITORIO>
+    ```
+
+2.  El proyecto utiliza wrappers de Gradle (`gradlew`) y Maven (`mvnw`), por lo que no es necesario tenerlos instalados globalmente. Los wrappers descargarán la versión requerida automáticamente.
+
+---
+
+## Estructura del Proyecto
+
+El proyecto sigue una estructura estándar para facilitar la navegación y el mantenimiento:
+
+```
+qa-api-integracion-tests/
+├── src/
+│   └── test/
+│       ├── java/
+│       │   └── com/
+│       │       └── tuempresa/
+│       │           └── proyecto/
+│       │               ├── hooks/                # Inicialización del escenari (OnStage, Actor)
+│       │               ├── runners/              # Runners de ejecución
+│       │               ├── stepdefinitions/      # Steps Cucumber (delgados)
+│       │               ├── tasks/                # Acciones de negocio (intención)
+│       │               ├── interactions/         # Acciones técnicas atómicas
+│       │               └── questions/            # Validaciones / consultas
+│       │
+│       └── resources/
+│           ├── features/                          # Features Cucumber (.feature)
+│           ├── serenity.conf                      # Configuración de entornos
+│           └── logback.xml                        # Configuración de logs (opcional)
+│
+├── build/                                         # Salida Gradle (reportes)
+├── target/                                        # Salida Maven (reportes)
+│
+├── docs/                                          # Documentación adicional (opcional)
+│   ├── troubleshooting.md
+│   ├── architecture.md
+│   └── coding-standards.md
+│
+├── build.gradle                                   # Configuración Gradle
+├── settings.gradle
+├── gradlew
+├── gradlew.bat
+│
+├── pom.xml                                        # Configuración Maven (opcional)
+├── mvnw
+├── mvnw.cmd
+│
+└── README.md                                      # Documentación principal
+                      # Wrapper de Maven para Unix/Linux
+```
+
+---
+
+## Configuración de Entornos
+
+La configuración para diferentes entornos (ej. `qa`, `dev`, `prod`) se gestiona en el archivo `src/test/resources/serenity.conf`.
+
+Puedes definir variables, como la URL base de la API, para cada entorno:
+
+```properties
+environments {
+  default {
+    baseUrl = "http://localhost:8080"
+  }
+  qa {
+    baseUrl = "https://api.qa.dominio.com"
+  }
+  prod {
+    baseUrl = "https://api.prod.dominio.com"
+  }
+}
+```
+
+---
+
+## Ejecución de las Pruebas
+
+Puedes ejecutar las pruebas automatizadas utilizando Gradle o Maven.
+
+### Usando Gradle
+
+Para ejecutar todas las pruebas en el entorno de `qa`, utiliza el siguiente comando. Esto limpiará el proyecto, ejecutará las pruebas y generará los reportes.
+
+```bash
+./gradlew clean test -Denvironment=qa
+```
+
+### Usando Maven
+
+De forma similar, puedes usar el wrapper de Maven para ejecutar las pruebas:
+
+```bash
+./mvnw clean verify -Denvironment=qa
+```
+
+> **Nota**: Reemplaza `qa` con el entorno que desees utilizar según lo definido en `serenity.conf`. Si no se especifica, se usará el entorno `default`.
+
+---
+
+## Visualización de Reportes
+
+Después de cada ejecución, Serenity BDD genera un reporte HTML detallado con los resultados de las pruebas.
+
+- **Si usaste Gradle**, el reporte se encontrará en:
+  `build/reports/serenity/index.html`
+
+- **Si usaste Maven**, el reporte se encontrará en:
+  `target/site/serenity/index.html`
+
+Abre el archivo `index.html` en tu navegador para ver un desglose completo de la ejecución, incluyendo los pasos de cada escenario y las capturas de evidencia.
+
