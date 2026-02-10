@@ -57,20 +57,44 @@ Asegúrate de tener instalado lo siguiente en tu sistema:
 El proyecto sigue una estructura estándar para facilitar la navegación y el mantenimiento:
 
 ```
-serenity-junit-starter/
-├── build/                      # Directorio de salida de Gradle (incluye reportes)
-├── target/                     # Directorio de salida de Maven (incluye reportes)
+qa-api-integracion-tests/
 ├── src/
-│   ├── main/java/              # Código fuente principal (si aplica)
 │   └── test/
-│       ├── java/               # Código de las pruebas (Steps, Tasks, Questions)
+│       ├── java/
+│       │   └── com/
+│       │       └── tuempresa/
+│       │           └── proyecto/
+│       │               ├── hooks/                # Inicialización del escenari (OnStage, Actor)
+│       │               ├── runners/              # Runners de ejecución
+│       │               ├── stepdefinitions/      # Steps Cucumber (delgados)
+│       │               ├── tasks/                # Acciones de negocio (intención)
+│       │               ├── interactions/         # Acciones técnicas atómicas
+│       │               └── questions/            # Validaciones / consultas
+│       │
 │       └── resources/
-│           ├── features/       # Archivos .feature de Cucumber
-│           └── serenity.conf   # Archivo de configuración de Serenity
-├── build.gradle                # Archivo de build para Gradle
-├── gradlew                     # Wrapper de Gradle para Unix/Linux
-├── pom.xml                     # Archivo de build para Maven
-└── mvnw                        # Wrapper de Maven para Unix/Linux
+│           ├── features/                          # Features Cucumber (.feature)
+│           ├── serenity.conf                      # Configuración de entornos
+│           └── logback.xml                        # Configuración de logs (opcional)
+│
+├── build/                                         # Salida Gradle (reportes)
+├── target/                                        # Salida Maven (reportes)
+│
+├── docs/                                          # Documentación adicional (opcional)
+│   ├── troubleshooting.md
+│   ├── architecture.md
+│   └── coding-standards.md
+│
+├── build.gradle                                   # Configuración Gradle
+├── settings.gradle
+├── gradlew
+├── gradlew.bat
+│
+├── pom.xml                                        # Configuración Maven (opcional)
+├── mvnw
+├── mvnw.cmd
+│
+└── README.md                                      # Documentación principal
+                      # Wrapper de Maven para Unix/Linux
 ```
 
 ---
